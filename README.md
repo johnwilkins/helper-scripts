@@ -65,3 +65,15 @@ $ create-ds-pr
 This is another script that I cannot live without. It says me lots of time and frustration.
 
 
+## Squash Commits
+The OCP team does not want your commit history so that they can keep the upstream `git` log clean and simple. It makes sense, but squashing commits interactively is tedious and for me a bit anxiety inducing. I have accidentally squashed more commits than I should have before, and this script automates most of the task, eliminates some anxiety and generally gets the job done quickly.
+
+Squashing commits is playing with power tools. So the script ensures that you are not on the `main` branch and inadvertantly squashing commits on `main`. It also does a pull in case you accepted some commit suggestions on a PR. This script works with standard working branch that merge to the upstream `main` branch, and it works with enterprise branches for a particular release. So the script will prompt you for the name of the base branch, which is usually `main`. The script also ensures that you have two or more commits so that you don't try to squash when you have no commits to squash.
+
+The script does have a known flaw, which I have not resolved yet: when you have to rebase a PR, it typically gets the commit count wrong--usually many more commits than you have to squash. So the script will ALWAYS ask you if you want to squash a certain number of commits before it actually does it. If the commit count is higher than the number of commits on the PR page, simply press *N* to abort the procedure. Alternatively, the script may prompt you how many commits you want to squash if it suspects the number is too high. The peer review squad likes a commit message on squashed commits, typically a message similar to the commit message in the PR (less the other things like sign-off, preview URLs, etc.).
+
+Within the `openshift-docs` repo, on a working branch, with all changes commited and pushed, and more than 1 commit in the PR, simply execute: 
+
+```bash
+$ squash-commits
+```
