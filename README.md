@@ -41,3 +41,27 @@ Within the `openshift-docs` repo, simply execute:
 ```bash
 $ create-enterprise-branch
 ```
+
+## Create a pull request
+I find creating pull requests manually to be rather tedious. The OCP team wants PRs in a particular format:
+* They wayt the JIRA ticket, and it's title in the PR title. 
+* They want a commit message.
+* They want a link to the JIRA ticket or BZ in the PR. 
+* They want the release version(s) that the PR corresponds to. 
+* They want a Preview URL.
+* They want you to sign-off the PR.  
+Additionally, Sheldon wants to have the PR URL in the JIRA ticket. All of these practices make perfect sense, but the process is tedious. So my `create-ds-pr` script (the `ds` means 'downstream' and is an artifact when I did both upstream and downstream work simultaneously) automates most of the process for you. 
+
+Since you won't be executing this on the `main` branch, the script ensures you are on a working branch. It prompts you for the JIRA ticket. It prompts you for a commit message. It prompts you for the release(s) number. Then, it creates the PR by contacting JIRA and retrieving the JIRA ticket title and retrieving any pre-existing PR URLs, formats the PR, creates the PR, and once created, it puts the PR URL back into the JIRA ticket automatically for you. To use this script, you must create a JIRA token (with a lenghty expiration, so you don't have to change it constantly). See lines 23-25 for instructions.
+
+Within the `openshift-docs` repo, on a working branch, with all changes commited and pushed, simply execute: 
+
+```bash
+$ create-ds-pr
+```
+
+**NOTE:** I don't use this script for release notes, because at the time of writing the script, the OCP team had not made the `BASE_BRANCH` variable modifiable, so creating a PR that will merge to `main` ends up creating a PR with merge conflicts and a bazillion commits--which is anxiety inducing. Hopefully, that will change in the future. 
+
+This is another script that I cannot live without. It says me lots of time and frustration.
+
+
