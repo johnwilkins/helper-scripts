@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+cd ~/ocp-docs
+git clone git@github.com:johnwilkins/openshift-docs.git
+cd openshift-docs
+git remote add upstream git@github.com:openshift/openshift-docs.git
+git config pull.rebase true
+cd -
