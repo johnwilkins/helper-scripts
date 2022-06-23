@@ -7,8 +7,20 @@ My `clone-openshift-docs` script is my most infrequently used script. It does wh
 ## Rebase OCP Main
 My `rebase-ocp-main` script is probably my most frequently used script. To avoid merge conflicts when creating a working branch, I ALWAYS rebase the main branch first. Although I don't use it this way anymore, I wrote the script so that it could run on a `cron` job such that it will stash work, change from a working branch to the `main` branch, rebase the repository, change back to the working branch (if any) and pop any stashed changes. If your OpenShift docs repo doesn't live in `~/ocp-repos`, you must modify line 3 of the script to reflect the location of your `openshift-docs` repo. This is a script that I cannot live without, because I don't want to remember to execute all the steps in the process of rebasing, since I do it so frequently.
 
-Within the `openshift-docs` repo, simpley execute: 
+Within the `openshift-docs` repo, simply execute: 
 
 ```bash
 $ rebase-ocp-main
 ```
+
+## Create Branch
+My `create-branch` script is a moderately helpful script. Creating a git branch is fairly simple. However, you must be in the repository. Also, when creating a new working branch, you want to ensure that you are creating the branch off of the `main` branch. Lastly, when creating a branch with `git checkout -b <branch_name>`, I often forget to set the upstream origin so that it's tracking my remote.
+
+To streamline my workflow, this script will ensure I'm in a git repository, it will ensure I'm on the main branch, and then it will prompt me for the JIRA ticket that corresponds to the branch. This makes it easy for me to know which branch corresponds to which JIRA ticket (or BZ number). Then, it sets the upstream origin so that I don't forget to do that. 
+
+Within the `openshift-docs` repo, simply execute: 
+
+```bash
+$ create-branch
+```
+
