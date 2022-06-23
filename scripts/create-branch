@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+
+#Ensure you are executing the script from within a git repository.
+if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+  echo "Proceeding with creating a working branch."
+else
+  echo "This is not a git repository. Please check your path syntax."
+  exit
+fi
+
+#Get the current branch
+CURRENT_BRANCH="$(git branch --show-current)"
+
+#Make sure you are on the main branch.
+if [ $CURRENT_BRANCH == "main" ];
+then
+  echo "What JIRA ticket corresponds to this branch? (e.g., BMPLATFORM-34):"
+  read JIRA_TICKET
+  git checkout -b $JIRA_TICKET
+  git push --set-upstream origin $JIRA_TICKET
+else
+  echo "ERROR: You should only execute this script from the main branch."
+  exit
+fi
