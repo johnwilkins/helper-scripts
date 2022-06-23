@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+  echo "Proceeding with rebase."
+else
+  echo "This is not a git repository. Please check your path syntax."
+  exit
+fi
+
+git stash
+
+CURRENT_BRANCH="$(git branch --show-current)"
+
+git fetch upstream
+git rebase upstream/main
+git push origin +$CURRENT_BRANCH
+
+git stash pop
