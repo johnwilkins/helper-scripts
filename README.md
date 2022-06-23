@@ -9,6 +9,6 @@ My `rebase-ocp-main` script is probably my most frequently used script. To avoid
 
 Within the `openshift-docs` repo, simpley execute: 
 
----
+```bash
 $ rebase-ocp-main
----
+```
