@@ -1,0 +1,61 @@
+#!/bin/bash
+#Ensure you are executing the script from within a git repository.
+if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+  echo "Proceeding with squashing commits."
+else
+  echo "This is not a git repository. Please check your path syntax."
+  exit
+fi
+
+#Get the current branch.
+CURRENT_BRANCH="$(git branch --show-current)"
+#Ensure you are not working off of the main branch.
+if [ $CURRENT_BRANCH == "main" ]; then
+  echo "ERROR: You should only execute this script on a working branch."
+  exit
+fi
+echo "You are currently on branch: $CURRENT_BRANCH"
+
+#Pull with rebase in case there are remote/online edits to the PR.
+git pull --rebase
+
+#Get the base branch. This will allow you to specify a release branch if necessary.
+echo "You are on $CURRENT_BRANCH."
+echo "What is the base branch for the $CURRENT_BRANCH branch? (e.g., main, enterprise-x.y)"
+read BASE_BRANCH
+
+#Get the commit count using the base branch.
+COMMIT_COUNT=$(git rev-list --count --no-merges $BASE_BRANCH..HEAD)
+
+#If commit count is less than 2, exit. There's nothing to squash.
+if [ $COMMIT_COUNT -lt 2 ]; then
+  echo "Commit count is $COMMIT_COUNT. Nothing to squash."
+  exit
+fi
+
+#If the commit count is suspiciously high, prompt the user for a commit count.
+if [ $COMMIT_COUNT -gt 5 ]; then
+  echo -e "Hmm...I'm counting $COMMIT_COUNT commits."
+  echo "That seems a bit high."
+  echo "Check your pull request commit count in the GitHub PR. How many commits do you want to squash?"
+  read COMMIT_COUNT
+fi
+
+#Prompt them on the commit count and branch name before commiting.
+echo "Do you want to squash $COMMIT_COUNT commits on branch $CURRENT_BRANCH to 1 commit?"
+echo "Answer Y/N followed by [Enter]: "
+read ANSWER
+
+#Test to see if the user answers yes.
+if [ $ANSWER == "Y" -o $ANSWER = "y" ];
+then
+  git reset --soft HEAD~$COMMIT_COUNT
+  echo "Squashing $COMMIT_COUNT commits into 1 commit."
+  echo "Provide a commit message."
+  read COMMIT_MESSAGE
+  git commit -m "$CURRENT_BRANCH: $COMMIT_MESSAGE."
+  git push origin +$CURRENT_BRANCH
+else
+  echo "I didn't get a Y or y. Buh bye!"
+  exit
+fi
